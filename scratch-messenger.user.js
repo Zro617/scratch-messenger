@@ -41,7 +41,6 @@ function prepareMessenger(e) {
 	var comment = prompt(`Message to ${user}:`)
 	if (!comment) return; // canceled
 	comment = chunkify(comment)
-	lastMessageTime = Date.now()
 	
 	var btn  = e.target
 	var user = e.target.id
@@ -51,9 +50,11 @@ function prepareMessenger(e) {
 	
 	function chunk() {
 		if (comment.length == 0) {
+			lastMessageTime = Date.now()
 			console.log('Finished sending')
 			btn.innerHTML = 'Message sent'
-			return setTimeout(()=>btn.innerHTML='Message '+user,cooldown-(Date.now()-lastMessageTime))
+			setTimeout(()=>btn.innerHTML='Message '+user,cooldown)
+			return;
 		}
 		
 		sendComment(user, comment.shift(), parentid, (err, xhr) => {
